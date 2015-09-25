@@ -77,13 +77,13 @@ instance Applicative Parser where
 -- Exercise 3
 
 abParser :: Parser (Char, Char)
-abParser = (,) <$> char 'a' <*> char 'b'
+abParser = liftA2 (,) (char 'a') (char 'b')
 
 abParser_ :: Parser ()
 abParser_ = const () <$> abParser
 
 intPair :: Parser [Integer]
-intPair = list <$> posInt <*> char ' ' <*> posInt
+intPair = liftA3 list posInt (char ' ') posInt
   where list x _ y = [x,y]
 
 -- Exercise 4
