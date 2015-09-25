@@ -70,14 +70,21 @@ takeJ n jl@(Append _ l r)
 
 -- Exercise 3
 
-scoreLine :: String -> JoinList (Score, Size) String
-scoreLine s = Single (scoreString s, Size 1) s
+scoreLine :: String -> JoinList Score String
+scoreLine s = Single (scoreString s) s
 
 -- Exercise 4
 
+scoreLine' :: String -> JoinList (Score, Size) String
+scoreLine' s = Single (scoreString s, Size 1) s
+
+instance Monoid (JoinList (Score, Size) String) where
+  mempty  = Empty
+  mappend = (+++)
+
 instance Buffer (JoinList (Score, Size) String) where
   toString = unlines . jlToList
-  fromString = foldl' (\jl s -> jl +++ scoreLine s) Empty . lines
+  fromString = mconcat . map scoreLine' . lines
   line = indexJ
   replaceLine n s jl = takeJ n jl +++ fromString s +++ dropJ (n + 1) jl
   numLines = getSize . snd. tag
