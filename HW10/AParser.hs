@@ -90,7 +90,6 @@ intPair = liftA3 list posInt (char ' ') posInt
 
 instance Alternative Parser where
   empty = Parser (const Nothing)
-  -- p1 <|> p2 = (<|>) <$> p1 <*> p2
   p1 <|> p2 = Parser f
     where f s = runParser p1 s <|> runParser p2 s
 
